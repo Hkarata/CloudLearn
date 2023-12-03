@@ -1,0 +1,48 @@
+﻿@inject NavigationManager NavigationManager
+
+<ul class="flex flex-col space-y-4 font-semibold text-sm uppercase">
+    <li class="p-2 flex flex-row rounded @(IsActive("Dashboard") ? "bg-amber-300" : "bg-slate-200")">
+        <NavLink class="w-full flex flex-row items-center justify-between" href="/Dashboard" Match="NavLinkMatch.All">dashboard
+            <img src="/Images/dashboard.png" width="30" height="30"/>
+            </NavLink>
+    </li>
+
+    <AuthorizeView Roles="Lecturer">
+        <Authorized>
+            <li class="p-2 flex flex-row rounded @(IsActive("Courses") ? "bg-amber-300" : "bg-slate-200")">
+                <NavLink class="w-full flex flex-row items-center justify-between" href="/Courses/Lecturer/TeachingCourses">
+                    Courses
+                    <img src="/Images/online-course.png" width="30" height="30" />
+                </NavLink>
+            </li>
+        </Authorized>
+    </AuthorizeView>
+    
+
+    <AuthorizeView Roles="Student">
+        <Authorized>
+            <li class="p-2 flex flex-row rounded @(IsActive("Courses") ? "bg-amber-300" : "bg-slate-200")">
+                <NavLink class="w-full flex flex-row items-center justify-between" href="/Courses/Student/AvailableCourses">
+                    Courses
+                    <img src="/Images/online-course.png" width="30" height="30" />
+                </NavLink>
+            </li>
+            <li class="p-2 flex flex-row rounded @(IsActive("PersonalDetails") ? "bg-amber-300" : "bg-slate-200")">
+                <NavLink class="w-full flex flex-row items-center justify-between" href="/Student/PersonalDetails">
+                    Personal Details
+                    <img src="/Images/personal-data.png" width="30" height="30" />
+                </NavLink>
+            </li>
+        </Authorized>
+    </AuthorizeView>
+
+    
+    
+</ul>
+
+@code {
+
+    private bool IsActive(string href) => NavigationManager.Uri.Contains(href);
+
+    
+}

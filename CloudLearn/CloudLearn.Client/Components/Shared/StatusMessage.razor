@@ -1,0 +1,17 @@
+﻿@if (!string.IsNullOrEmpty(DisplayMessage))
+{
+    var statusMessageClass = DisplayMessage.StartsWith("Error") ? "text-red-500" : "text-green-500";
+    <div class="font-semibold text-sm @statusMessageClass" role="alert">
+        @DisplayMessage
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public string? Message { get; set; }
+
+    private string? DisplayMessage => Message;
+
+    
+}

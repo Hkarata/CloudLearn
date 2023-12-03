@@ -1,0 +1,112 @@
+﻿@page "/Courses/Lecturer/AddCourse"
+@attribute [Authorize(Roles = "Lecturer")]
+@attribute [StreamRendering(true)]
+@rendermode InteractiveServer
+@layout Client.Components.Layouts.ClientLayout
+@inject HttpClient _httpClient
+@inject AuthenticationStateProvider authStateProvider
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>Courses</PageTitle>
+<h3 class="tracking-wide w-full uppercase font-semibold text-base text-indigo-500">Lets add a course</h3>
+
+<EditForm Model="Input" OnValidSubmit="Add" FormName="AddCourse">
+    <DataAnnotationsValidator/>
+    <AntiforgeryToken/>
+
+    <div class="p-4 border rounded shadow-md flex flex-row justify-center items-center">
+
+        <div class="basis-2/4">
+
+            <label class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">CourseCode</label><br />
+            <InputText class="mt-2 mb-4 p-1 border-amber-300 border-b outline-none font-semibold w-96" @bind-Value="Input.CourseCode" />
+            <p><ValidationMessage For="() => Input.CourseCode" /></p>
+
+            <label class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">CourseName</label><br />
+            <InputText class="mt-2 mb-4 p-1 border-amber-300 border-b outline-none font-semibold w-96" @bind-Value="Input.CourseCode" />
+            <p><ValidationMessage For="() => Input.CourseName" /></p>
+
+
+            <label class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">CourseDescription</label><br />
+            <InputText class="mt-2 mb-4 p-1 border-amber-300 border-b outline-none font-semibold w-96" @bind-Value="Input.CourseCode" />
+            <p><ValidationMessage For="() => Input.CourseDescription" /></p>
+
+        </div>
+
+        <div class="basis-2/4">
+
+            <label class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">degree program</label><br />
+            <select multiple class="mt-2 mb-4 p-1 border-amber-300 border-b outline-none font-semibold w-96" @bi>
+                <option></option>
+                <option value="B. Sc. Computer Science">B. Sc. Computer Science</option>
+                <option value="B. Sc. Telecommunications">B. Sc. Telecommunications</option>
+                <option value="B. Sc. Computer Eng and IT">B. Sc. Computer Eng and IT</option>
+                <option value="B. Sc. Business and IT">B. Sc. Business and IT</option>
+                <option value="B. Sc. Electronic Science">B. Sc. Electronic Science</option>
+            </select>
+            <p><ValidationMessage For="() =>Input.Programs" /></p>
+
+            <label class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Academic year</label><br />
+            <select multiple class="mt-2 mb-4 p-1 border-amber-300 border-b outline-none font-semibold w-96" >
+                <option></option>
+                <option value="First Year">First Year</option>
+                <option value="Second Year">Second Year</option>
+                <option value="Third Year">Third Year</option>
+                <option value="Fourth Year">Fourth Year</option>
+            </select>
+            <p><ValidationMessage For="() =>Input.Years" /></p>
+
+
+        </div>
+
+    </div>
+
+</EditForm>
+
+
+@code {
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    private string? UserId { get; set; }
+
+    void Add()
+    {
+        
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity != null)
+        {
+            UserId = user.Identity.Name;
+        }
+
+    }
+
+    private sealed class InputModel
+    {
+        [Required, MaxLength(5), MinLength(5)]
+        public string CourseCode { get; set; } = "";
+
+        [Required, MaxLength(60), MinLength(10)]
+        public string CourseName { get; set; } = "";
+
+        [Required, MinLength(20)]
+        public string CourseDescription { get; set; } = "";
+
+        [Required]
+        HashSet<string> selectedPrograms = new();
+
+        [Required]
+        HashSet<string> selectedYears = new();
+
+    }
+
+    
+
+
+}

@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34310.174
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudLearn.AppHost", "CloudLearn.AppHost\CloudLearn.AppHost.csproj", "{37092483-55E4-496E-AD6F-200903BE2027}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudLearn.ServiceDefaults", "CloudLearn.ServiceDefaults\CloudLearn.ServiceDefaults.csproj", "{097A1AB0-87CC-4B78-8AEE-BF544465EDB1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudLearn.Api", "CloudLearn.Api\CloudLearn.Api.csproj", "{D3586021-50C6-489A-B567-B7EAB5E71218}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudLearn.Shared", "CloudLearn.Shared\CloudLearn.Shared.csproj", "{858D930F-2290-462B-B44C-7FFD7DBA862D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudLearn", "CloudLearn\CloudLearn\CloudLearn.csproj", "{B3088D8E-5C1F-436A-AFC5-E8B86936E3DB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudLearn.Client", "CloudLearn\CloudLearn.Client\CloudLearn.Client.csproj", "{929CB366-F8B3-4F81-8461-8C7AA79A3D4A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37092483-55E4-496E-AD6F-200903BE2027}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37092483-55E4-496E-AD6F-200903BE2027}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37092483-55E4-496E-AD6F-200903BE2027}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37092483-55E4-496E-AD6F-200903BE2027}.Release|Any CPU.Build.0 = Release|Any CPU
+		{097A1AB0-87CC-4B78-8AEE-BF544465EDB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{097A1AB0-87CC-4B78-8AEE-BF544465EDB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{097A1AB0-87CC-4B78-8AEE-BF544465EDB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{097A1AB0-87CC-4B78-8AEE-BF544465EDB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3586021-50C6-489A-B567-B7EAB5E71218}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3586021-50C6-489A-B567-B7EAB5E71218}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3586021-50C6-489A-B567-B7EAB5E71218}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3586021-50C6-489A-B567-B7EAB5E71218}.Release|Any CPU.Build.0 = Release|Any CPU
+		{858D930F-2290-462B-B44C-7FFD7DBA862D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{858D930F-2290-462B-B44C-7FFD7DBA862D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{858D930F-2290-462B-B44C-7FFD7DBA862D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{858D930F-2290-462B-B44C-7FFD7DBA862D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3088D8E-5C1F-436A-AFC5-E8B86936E3DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3088D8E-5C1F-436A-AFC5-E8B86936E3DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3088D8E-5C1F-436A-AFC5-E8B86936E3DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3088D8E-5C1F-436A-AFC5-E8B86936E3DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{929CB366-F8B3-4F81-8461-8C7AA79A3D4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{929CB366-F8B3-4F81-8461-8C7AA79A3D4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{929CB366-F8B3-4F81-8461-8C7AA79A3D4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{929CB366-F8B3-4F81-8461-8C7AA79A3D4A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AD205E96-D18C-4FC6-B8DC-A78245AF9218}
+	EndGlobalSection
+EndGlobal

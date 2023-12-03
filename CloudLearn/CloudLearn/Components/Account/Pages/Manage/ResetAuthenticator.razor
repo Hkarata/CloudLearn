@@ -1,0 +1,56 @@
+﻿@page "/Account/Manage/ResetAuthenticator"
+
+@using Microsoft.AspNetCore.Identity
+@using CloudLearn.Data
+
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IdentityUserAccessor UserAccessor
+@inject IdentityRedirectManager RedirectManager
+@inject ILogger<ResetAuthenticator> Logger
+
+<PageTitle>Reset authenticator key</PageTitle>
+
+
+<h3 class="font-semibold text-base tracking-wide uppercase text-indigo-500">Reset authenticator key</h3>
+<hr/>
+<StatusMessage />
+<div class="ml-12 mt-6">
+    <div class="alert alert-warning" role="alert">
+        <p>
+            <strong class="uppercase text-red-500 underline">If you reset your authenticator key your authenticator app will not work until you reconfigure it.</strong>
+        </p>
+        <p class="mt-4 text-sm font-semibold">
+            This process disables 2FA until you verify your authenticator app.
+            If you do not complete your authenticator app configuration you may lose access to your account.
+        </p>
+    </div>
+    <div>
+        <form @formname="reset-authenticator" @onsubmit="OnSubmitAsync" method="post">
+            <AntiforgeryToken />
+            <button class="hover:bg-red-500 mt-2 bg-amber-300 w-96 p-2 cursor-pointer text-black hover:text-white rounded uppercase tracking-wide text-sm font-semibold" type="submit">Reset authenticator key</button>
+        </form>
+    </div>
+</div>
+
+
+@code {
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    private async Task OnSubmitAsync()
+    {
+        var user = await UserAccessor.GetRequiredUserAsync(HttpContext);
+        await UserManager.SetTwoFactorEnabledAsync(user, false);
+        await UserManager.ResetAuthenticatorKeyAsync(user);
+        var userId = await UserManager.GetUserIdAsync(user);
+        Logger.LogInformation("User with ID '{UserId}' has reset their authentication app key.", userId);
+
+        await SignInManager.RefreshSignInAsync(user);
+
+        RedirectManager.RedirectToWithStatus(
+            "Account/Manage/EnableAuthenticator",
+            "Your authenticator app key has been reset, you will need to configure your authenticator app using the new key.",
+            HttpContext);
+    }
+}

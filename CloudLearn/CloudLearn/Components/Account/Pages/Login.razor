@@ -1,0 +1,123 @@
+﻿@page "/Account/Login"
+
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Identity
+@using CloudLearn.Data
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject ILogger<Login> Logger
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+
+<PageTitle>Log in</PageTitle>
+
+
+<div class="flex flex-col justify-center h-screen items-center">
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-xl shadow-indigo-300 overflow-hidden md:max-w-2xl">
+        <section class="flex flex-col">
+             <div class="p-6">
+                      <div class="p-6 border-indigo-500 rounded-xl border-2 w-50 shadow-inner">
+                          <div class="w-full flex flex-row justify-center items-center mb-4">
+                              <img src="/Images/img.png" width=100 height=100 alt="App logo" class="rounded-full object-contain"/>
+                          </div>
+                    <div class="uppercase text-center tracking-wide text-sm text-indigo-500 font-semibold">WELCOME TO CLOUD LEARN</div>
+                    <StatusMessage Message="@errorMessage" />
+                    <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" role="alert" />
+                        <div>
+                            <label for="email" class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">User id</label><br />
+                            <InputText @bind-Value="Input.Email" class="mt-2 mb-4 p-1 border-amber-300 border-b outline-none font-semibold w-96" autocomplete="username" aria-required="true" placeholder="2021-04-*****" />
+                            <ValidationMessage For="() => Input.Email" class="text-red-500" />
+                        </div>
+                        <div>
+                            <label for="password" class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Password</label><br />
+                            <InputText type="password" @bind-Value="Input.Password" class="mt-2 mb-4 p-1 border-amber-300 border-b outline-none font-semibold w-96" autocomplete="current-password" aria-required="true" placeholder="**********" />
+                            <ValidationMessage For="() => Input.Password" class="text-red-500" />
+                        </div>
+                        <div>
+                            <label class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
+                                <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
+                                Remember me
+                            </label>
+                        </div>
+                        <div>
+                            <button type="submit" class="hover:bg-green-500 bg-indigo-500 w-96 p-2 cursor-pointer text-white rounded uppercase tracking-wide text-sm font-semibold">Log in</button>
+                        </div>
+                        <div class="flex flex-row justify-between mt-4 uppercase font-semibold text-sm">
+                            <p class="hover:underline hover:text-red-500">
+                                <a href="Account/ForgotPassword">Forgot your password?</a>
+                            </p>
+                            <p class="hover:underline hover:text-green-500">
+                                <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
+                            </p>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+@code {
+    private string? errorMessage;
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (HttpMethods.IsGet(HttpContext.Request.Method))
+        {
+            // Clear the existing external cookie to ensure a clean login process
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+        }
+    }
+
+    public async Task LoginUser()
+    {
+        // This doesn't count login failures towards account lockout
+        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+        var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+        if (result.Succeeded)
+        {
+            Logger.LogInformation("User logged in.");
+            RedirectManager.RedirectTo("/Dashboard");
+        }
+        else if (result.RequiresTwoFactor)
+        {
+            RedirectManager.RedirectTo(
+                "Account/LoginWith2fa",
+                new() { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
+        }
+        else if (result.IsLockedOut)
+        {
+            Logger.LogWarning("User account locked out.");
+            RedirectManager.RedirectTo("Account/Lockout");
+        }
+        else
+        {
+            errorMessage = "Error: Invalid login attempt.";
+        }
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        public string Email { get; set; } = "";
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; } = "";
+
+        [Display(Name = "Remember me?")]
+        public bool RememberMe { get; set; }
+    }
+}

@@ -1,0 +1,38 @@
+@page "/Courses/Student/AvailableCourses"
+@attribute [Authorize]
+@attribute [StreamRendering(true)]
+@rendermode InteractiveAuto
+@layout Client.Components.Layouts.ClientLayout
+@inject HttpClient _httpClient
+
+<PageTitle>Courses</PageTitle>
+
+
+<p class="font-semibold text-sm tracking-wide uppercase text-indigo-500 float-right">Courses</p>
+
+<br/>
+
+@if (loading)
+{
+    
+}
+
+@code{
+    bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await _httpClient.GetAsync("http://apiservice/api/courses");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var data = response.Content.ReadFromJsonAsAsyncEnumerable<CloudLearn.Shared.DTOs.CourseDto>();
+            loading = false;
+        }
+        else
+        {
+            
+        }
+    }
+
+}

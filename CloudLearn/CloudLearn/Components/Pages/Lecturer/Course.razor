@@ -1,0 +1,59 @@
+﻿@page "/Courses/Lecturer/TeachingCourses"
+@attribute [Authorize(Roles = "Lecturer")]
+@attribute [StreamRendering(true)]
+@rendermode InteractiveServer
+@layout Client.Components.Layouts.ClientLayout
+@inject HttpClient _httpClient
+@inject AuthenticationStateProvider authStateProvider
+
+<PageTitle>Courses</PageTitle>
+<h3 class="tracking-wide w-full uppercase font-semibold text-base text-indigo-500">Course</h3>
+
+@if (loading)
+{
+    <div class="flex flex-col justify-center items-center">
+        <img src="/Images/loading.gif" />
+    </div>
+}
+else
+{
+    if (Courses.Count == 0)
+    {
+        <div class="flex mt-16 space-y-4 flex-col justify-center items-center">
+            <img src="/Images/loading.gif" width="200" height="200" />
+            <p class="text-center tracking-wide w-full uppercase font-semibold text-base text-indigo-500">You are not teaching any course yet!</p>
+            <NavLink class="hover:underline text-center tracking-wide w-full uppercase font-semibold text-base text-green-500" href="/Courses/Lecturer/AddCourse">Add Course</NavLink>
+        </div>
+        
+    }
+}
+
+
+@code {
+
+    bool loading { get; set; } = true;
+
+    public string? UserId { get; set; }
+
+    List<CourseDto>? Courses { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity != null)
+        {
+            UserId = user.Identity.Name;
+        }
+
+        var response = await _httpClient.GetAsync($"http://apiservice/api/courses/Lecturer/{UserId}/Courses");
+
+        if (response.IsSuccessStatusCode)
+        {
+            Courses = await response.Content.ReadFromJsonAsync<List<CourseDto>>();
+            loading = false;
+        }
+    }
+
+
+}

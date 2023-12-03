@@ -1,0 +1,51 @@
+﻿@inherits LayoutComponentBase
+@inject AuthenticationStateProvider authStateProvider
+
+
+<div class="h-screen bg-amber-300">
+    <div class="p-2 ">
+        <div class="flex flex-row items-center h-16 pr-2 pl-2 bg-white rounded shadow-md shadow-gray-500">
+
+            <div>
+                <img src="/Images/lesson.png" width="60" height="60" />
+            </div>
+
+            <div class="pl-4">
+                <p class="font-semibold uppercase text-base text-indigo-500">CloudLearn</p>
+                <p class="font-semibold capitalize text-xs "> limitless in potential and always there, ready to be accessed at any time</p>
+            </div>
+
+            <div class="ml-auto">
+                <NavLink href="/Account/Manage" class="font-semibold hover:underline text-base text-indigo-500 uppercase float-right">@UserId</NavLink><br />
+                <p class="font-semibold text-xs uppercase">Continue learning with us</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="flex flex-row p-2 space-x-2">
+        <div class="basis-1/6 p-2 bg-white rounded shadow-md shadow-gray-300">
+            <NavMenu />
+        </div>
+        <div class="basis-5/6 p-2 bg-white rounded shadow-md shadow-gray-300" style="height:598px">
+            @Body
+        </div>
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public string? UserId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity != null)
+        {
+            UserId = user.Identity.Name;
+        }
+        
+    }
+
+}

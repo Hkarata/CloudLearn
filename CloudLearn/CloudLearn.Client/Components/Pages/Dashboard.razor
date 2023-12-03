@@ -1,0 +1,45 @@
+@page "/Dashboard"
+@rendermode InteractiveAuto
+@layout Client.Components.Layouts.ClientLayout
+
+
+
+<p class="font-semibold text-sm tracking-wide uppercase text-indigo-500 float-right">Dashboard</p>
+
+<br/>
+
+<div class="p-2">
+    <div class="bg-white shadow-md text-indigo-500 border rounded flex flex-row space-x-3 text-base font-semibold tracking-wide uppercase">
+        <div class="flex flex-row items-center p-2 cursor-pointer @((selectedTab == 1) ? "bg-slate-200 rounded" : "")" @onclick="() => SelectTab(1)">
+            <img src="/Images/book.png" width="20" height="20" class="mr-2" />
+            My Courses
+        </div>
+        <div class="flex flex-row items-center p-2 cursor-pointer @((selectedTab == 2) ? "bg-slate-200 rounded" : "")" @onclick="() => SelectTab(2)">
+            <img src="/Images/notification.png" width="20" height="20" class="mr-2" />
+            Notifications
+        </div>
+        <!-- Add more tabs as needed -->
+    </div>
+
+    <div class="bg-white p-2 shadow-md border rounded mt-4 w-full" style="height:480px;">
+        @if (selectedTab == 1)
+        {
+            <p>Content for Tab 1</p>
+            
+        }
+        else if (selectedTab == 2)
+        {
+            <p>Content for Tab 2</p>
+        }
+        <!-- Add more content sections as needed -->
+    </div>
+</div>
+
+@code {
+    int selectedTab = 1;
+
+    void SelectTab(int tabNumber)
+    {
+        selectedTab = tabNumber;
+    }
+}

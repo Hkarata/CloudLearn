@@ -1,0 +1,68 @@
+﻿@page "/"
+
+
+<PageTitle>Welcome</PageTitle>
+
+<div class="h-screen bg-amber-300 p-2">
+
+    <div class="flex flex-row items-center h-16 pr-2 pl-2 bg-white rounded shadow-md shadow-gray-500">
+
+        <div>
+            <img src="/Images/lesson.png" width="60" height="60" />
+        </div>
+
+        <div class="pl-4">
+            <p class="font-semibold uppercase text-base text-indigo-500">CloudLearn</p>
+            <p class="font-semibold capitalize text-xs "> limitless in potential and always there, ready to be accessed at any time</p>
+        </div>
+
+        <div class="ml-auto">
+            <NavLink href="/Account/Login" class="font-semibold hover:underline text-base text-indigo-500 uppercase float-right">Sign In</NavLink><br />
+            <p class="font-semibold text-xs uppercase">Continue learning with us</p>
+        </div>
+    </div>
+
+    <div class="flex flex-row mt-4 space-x-2">
+        <div class="basis-2/4 p-4 ">
+
+            <p class="font-semibold mt-16 antialiased text-3xl">
+                Welcome to
+            </p>
+            <p class="text-white font-extrabold text-7xl">
+                CloudLearn
+            </p>
+
+            <p class="capitalize mt-4 font-semibold text-base">
+                the online learning platform that lets you access lectures anytime, anywhere. With CloudLearn, you can:
+            </p>
+            <ol class="ml-16 text-justify list-disc font-semibold text-gray-900 space-y-2 mt-4">
+                <li>
+                    View online lectures live or recorded, with interactive features such as polls, quizzes, and chat.
+                </li>
+                <li>
+                    See your lecture schedule, assignments, grades, and feedback in one place.
+                </li>
+                <li>
+                    Collaborate with other students and instructors through forums, groups, and Online lectures.
+                </li>
+                <li>
+                    Access a variety of learning resources, such as eBooks, videos, podcasts, and more.
+                </li>
+            </ol>
+
+            <button class="bg-white hover:bg-indigo-500 hover:text-white flex flex-row mt-4 p-2 rounded shadow-md shadow-gray-500 font-semibold text-base tracking-wide w-full mt-1 uppercase text-indigo-700">
+                <NavLink class="w-full" href="/Account/Register">Join us in learning!</NavLink>
+            </button>
+
+        </div>
+        <div class="basis-2/4 bg-white  rounded flex flex-col justify-center items-center">
+            <img src="/Images/cloud.jfif" width="300" height="300" class="rounded-full object-contain" />
+            <br />
+            <p class="font-semibold capitalize text-base tracking-wide "> limitless in potential and always there, ready to be accessed at any time</p>
+
+        </div>
+    </div>
+
+</div>
+
+

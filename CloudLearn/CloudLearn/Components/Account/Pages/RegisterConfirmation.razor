@@ -1,0 +1,88 @@
+﻿@page "/Account/RegisterConfirmation"
+
+@using System.Text
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using CloudLearn.Data
+
+@inject UserManager<ApplicationUser> UserManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+
+<PageTitle>Register confirmation</PageTitle>
+
+<div class="flex flex-col items-center justify-center h-screen">
+    <div class="max-w-md mx-auto bg-white rounded-xl p-8 shadow-md shadow-green-500 overflow-hidden md:max-w-2xl">
+        <div class="w-full flex flex-row justify-center items-center mb-4">
+            <img src="/Images/img.png" width=100 height=100 alt="App logo" class="rounded-full object-contain" />
+        </div>
+        <h1 class="uppercase text-sm text-center font-semibold text-green-500">Registration confirmation</h1>
+
+        <br />
+        <StatusMessage Message="@statusMessage" />
+
+        @if (emailConfirmationLink is not null)
+        {
+            <p class="text-sm font-semibold">
+                Hello @Email
+            </p>
+            <br/>
+            <p class="text-sm font-semibold">
+                Thanks for accommodating Cloud Learn in your learning journey!. You will be excited as it is.
+            </p>
+            <br />
+            <p class="text-sm font-semibold">
+                Happy Learning! 👍👌
+            </p>
+            <br />
+            <p class="text-sm font-semibold text-indigo-500">
+                <a href="@emailConfirmationLink">Click here to confirm your account</a>
+            </p>
+        }
+        else
+        {
+            <p>Please check your email to confirm your account.</p>
+        }
+    </div>
+</div>
+
+
+@code {
+    private string? emailConfirmationLink;
+    private string? statusMessage;
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromQuery]
+    private string? Email { get; set; }
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Email is null)
+        {
+            RedirectManager.RedirectTo("");
+        }
+
+        var user = await UserManager.FindByEmailAsync(Email);
+        if (user is null)
+        {
+            HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+            statusMessage = "Error finding user for unspecified email";
+        }
+        else if (EmailSender is IdentityNoOpEmailSender)
+        {
+            // Once you add a real email sender, you should remove this code that lets you confirm the account
+            var userId = await UserManager.GetUserIdAsync(user);
+            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            emailConfirmationLink = NavigationManager.GetUriWithQueryParameters(
+                NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
+                new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
+        }
+    }
+}

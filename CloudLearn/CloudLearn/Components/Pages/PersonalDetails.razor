@@ -1,0 +1,191 @@
+﻿@page "/Student/PersonalDetails"
+@attribute [Authorize(Roles = "Student")]
+@rendermode InteractiveServer
+@attribute [StreamRendering(true)]
+@layout Client.Components.Layouts.ClientLayout
+@using System.ComponentModel.DataAnnotations
+@inject HttpClient httpClient
+@inject AuthenticationStateProvider authStateProvider
+
+<PageTitle>Personal Details</PageTitle>
+
+<p class="font-semibold text-sm tracking-wide uppercase text-indigo-500 float-right">student personal details</p>
+
+<br />
+
+<CloudLearn.Client.Components.Shared.StatusMessage Message="@message"/>
+
+@if(!String.IsNullOrEmpty(data.Name))
+{
+    <div class="flex flex-row justify-center space-x-4 items-center mt-10 p-2">
+
+        <div class="basis-2/4 p-6 flex flex-col justify-center items-center border shadow-md rounded-lg">
+            <form>
+
+                <label class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Name</label><br />
+                <input class="mt-2 mb-4 p-1 border-amber-300 border-b outline-none font-semibold w-96" Value="@data.Name" />
+                <br/>
+
+                <label class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">degree program</label><br />
+                <input class="mt-2 mb-4 p-1 border-amber-300 border-b outline-none font-semibold w-96" Value="@data.Program" />
+                <br />
+
+                <label class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Academic year</label><br />
+                <input class="mt-2 mb-4 p-1 border-amber-300 border-b outline-none font-semibold w-96" Value="@data.Year" />
+
+            </form>
+        </div>
+
+        <div class="basis-2/4 flex flex-col justify-center items-center">
+
+            <img src="/Images/studan.gif" width="150" height="150" />
+            <div class="flex flex-row">
+                <div>
+                    <img src="/Images/personal-data.png" alt="Image" width="200" height="200">
+                </div>
+                <div>
+                    <p class="text-base font-semibold">
+                        Your information is exclusively disclosed to instructors delivering your courses and system administrators. No external third party has access to your details.
+                    </p>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+}
+else
+{
+    <div class="flex flex-row justify-center space-x-4 items-center mt-10 p-2">
+
+        <div class="basis-2/4 p-6 flex flex-col justify-center items-center border shadow-md rounded-lg">
+            <EditForm Model="Input" OnValidSubmit="Submit">
+                <DataAnnotationsValidator />
+                <AntiforgeryToken />
+
+                <label class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Name</label><br />
+                <InputText class="mt-2 mb-4 p-1 border-amber-300 border-b outline-none font-semibold w-96" @bind-Value="Input.Name" placeholder="KARATA, HERI MUSSA" />
+                <p><ValidationMessage For="() =>Input.Name" /></p>
+
+                <label class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">degree program</label><br />
+                <InputSelect class="mt-2 mb-4 p-1 border-amber-300 border-b outline-none font-semibold w-96" @bind-Value="Input.Program">
+                    <option></option>
+                    <option value="B. Sc. Computer Science">B. Sc. Computer Science</option>
+                    <option value="B. Sc. Telecommunications">B. Sc. Telecommunications</option>
+                    <option value="B. Sc. Computer Eng and IT">B. Sc. Computer Eng and IT</option>
+                    <option value="B. Sc. Business and IT">B. Sc. Business and IT</option>
+                    <option value="B. Sc. Electronic Science">B. Sc. Electronic Science</option>
+                </InputSelect>
+                <p><ValidationMessage For="() =>Input.Program" /></p>
+
+                <label class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Academic year</label><br />
+                <InputSelect class="mt-2 mb-4 p-1 border-amber-300 border-b outline-none font-semibold w-96" @bind-Value="Input.Year">
+                    <option></option>
+                    <option value="First Year">First Year</option>
+                    <option value="Second Year">Second Year</option>
+                    <option value="Third Year">Third Year</option>
+                    <option value="Fourth Year">Fourth Year</option>
+                </InputSelect>
+                <p><ValidationMessage For="() =>Input.Year" /></p>
+
+                <button type="submit" class="hover:bg-green-500 bg-indigo-500 w-96 p-2 cursor-pointer text-white rounded uppercase tracking-wide text-sm font-semibold">Save</button>
+            </EditForm>
+        </div>
+
+        <div class="basis-2/4 flex flex-col justify-center items-center">
+
+            <img src="/Images/studan.gif" width="150" height="150" />
+            <div class="flex flex-row">
+                <div>
+                    <img src="/Images/personal-data.png" alt="Image" width="200" height="200">
+                </div>
+                <div>
+                    <p class="text-base font-semibold">
+                        Your information is exclusively disclosed to instructors delivering your courses and system administrators. No external third party has access to your details.
+                    </p>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+}
+
+
+
+
+
+
+
+
+
+
+
+@code{
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    public string? UserId { get; set; }
+
+    public StudentDto data { get; set; }
+
+    public string? message { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity != null)
+        {
+            UserId = user.Identity.Name;
+        }
+        httpClient.DefaultRequestHeaders.Add("x-api-key", "E8E736FBBBD545D58BE3DBD912197A15");
+        data = await httpClient.GetFromJsonAsync<StudentDto>($"http://apiservice/api/students/{UserId}");
+    }
+
+    async void Submit()
+    {
+        if (!String.IsNullOrEmpty(UserId))
+        {
+            var request = new StudentDto
+                {
+                    UserId = UserId,
+                    Name = Input.Name,
+                    Program = Input.Program,
+                    Year = Input.Year
+                };
+            httpClient.DefaultRequestHeaders.Add("x-api-key", "E8E736FBBBD545D58BE3DBD912197A15");
+            var response = await httpClient.PostAsJsonAsync<StudentDto>("http://apiservice/api/students", request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                message = "Your personal details have been saved";
+            }
+            else
+            {
+                message = $"Error : {response.Content.ToString}";
+            }
+            
+
+        }
+        
+    }
+
+
+    private sealed class InputModel
+    {
+        [Required]
+        [MaxLength(50, ErrorMessage = "This name is very long")]
+        public string Name { get; set; } = "";
+
+        [Required]
+        public string Program { get; set; } = "";
+
+        [Required]
+        public string Year { get; set; } = "";
+    }
+
+}
